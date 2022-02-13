@@ -49,7 +49,8 @@ jobs:
           haxelib run lime rebuild extension-webm mac
           haxelib git faxe https://github.com/uhrobots/faxe
           haxelib git linc_luajit https://github.com/ThatDisabledKid/linc_luajit
-          haxelib install actuate                                                                                             
+          haxelib install actuate
+          haxelib install newgrounds
           haxelib list
       - name: Create Version Tag
         run: echo "${{github.run_id}}" > VERSION
