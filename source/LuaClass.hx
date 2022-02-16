@@ -24,7 +24,6 @@ import haxe.DynamicAccess;
 import openfl.display.GraphicsShader;
 import states.*;
 import ui.*;
-import llua.Macro.*;
 import openfl.display.BlendMode;
 import flixel.util.FlxColor;
 import flixel.FlxBasic;
@@ -49,7 +48,6 @@ class LuaStorage {
 class LuaClass {
   public var properties:Map<String,LuaProperty> = [];
   public var methods:Map<String,cpp.Callable<StatePointer->Int> > = [];
-  public var className:String = "BaseClass";
   private static var state:State;
   public var addToGlobal:Bool=true;
   public function Register(l:State){
@@ -2080,35 +2078,6 @@ class LuaShaderClass extends LuaClass {
       }
       //Reflect.setProperty(effect,Lua.tostring(l,2),Lua.tonumber(l,3));
       return 0;
-  }
-
-  private static function getProperty(l:StatePointer):Int{
-    // 1 = self
-    // 2 = property
-    var property = LuaL.checkstring(state,2);
-    Lua.getfield(state,1,"className");
-    var name = Lua.tostring(state,-1);
-    var shader = PlayState.currentPState.luaObjects[name];
-    var parameter = Reflect.getProperty(shader,property);
-    Convert.toLua(state,Reflect.getProperty(parameter,"value"));
-    //Convert.toLua(state,Reflect.getProperty(shader,property));
-    return 1;
-  }
-
-  private static function setProperty(l:StatePointer):Int{
-    // 1 = self
-    // 2 = property
-    // 3 = value
-    var property = LuaL.checkstring(state,2);
-    var value = Convert.fromLua(state,3);
-    Lua.getfield(state,1,"className");
-    var name = Lua.tostring(state,-1);
-    var shader = PlayState.currentPState.luaObjects[name];
-    var parameter = Reflect.getProperty(shader,property);
-    Reflect.setProperty(parameter,"value",value);
-    //Reflect.setProperty(shader,property,value);
-
-    return 1;
   }
 
   private static var setvarC:cpp.Callable<StatePointer->Int> = cpp.Callable.fromStaticFunction(setProperty);
